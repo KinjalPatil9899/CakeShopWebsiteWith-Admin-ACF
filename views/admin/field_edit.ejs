@@ -1,0 +1,243 @@
+<%- include('header') %>
+    <main id="main" class="main">
+
+        <% if(fields_list){ %>
+            <% fields_list.forEach(entry => { %>
+                <div class="pagetitle">
+                    <h1>Edit Field</h1>
+                    <nav>
+                        <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/admin/custom_fields">Custom Fields</a></li>
+                        <li class="breadcrumb-item"><a href="/admin/field_groups_edit/<%= entry.field_groups_id %>">Fields List</a></li>
+                        <li class="breadcrumb-item active">Edit Field</li>
+                        </ol>
+                    </nav>
+                </div><!-- End Page Title -->
+
+                <section class="section">
+                    <div class="row">
+                        <div class="col-lg-10">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Edit Field</h5>
+                                    <!-- General Form Elements -->
+                                    <form action="../update_field/<%= entry.fields_id %>" method="post">
+                                        <% if(field_type_list){ %>
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label">Field Type</label>
+                                                <div class="col-sm-10">
+                                                    <select name="field_type_id" id="field_type_id" class="form-select" aria-label="Default select example" onchange="myFunction()">
+                                                        <% field_type_list.forEach(field_type => { %>
+                                                            <% if(field_type.field_type_id == entry.field_type_id){ %>
+                                                                <option selected value="<%= field_type.field_type_id %>"><%= field_type.field_type_value %></option>
+                                                            <% } else { %>
+                                                                <option value="<%= field_type.field_type_id %>"><%= field_type.field_type_value %></option>
+                                                            <% } %>
+                                                        <% }) %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        <% } %>
+
+                                        <% if(tab_fields_list){ %>
+                                            <div class="row mb-3" id="tab_id_div">
+                                                <label class="col-sm-2 col-form-label">Tab Name</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-select" id="field_tab_id" name="field_tab_id" class="form-select" aria-label="Default select example" required onchange="myFunction()">
+                                                        <option value="0">Please Select Tab</option>
+                                                        <% tab_fields_list.forEach(fields => { %>
+                                                            <% if(fields.fields_id == entry.field_tab_id ){ %>
+                                                                <option value="<%= fields.fields_id %>" selected><%= fields.fields_name %></option>
+                                                            <% } else { %>
+                                                                <option value="<%= fields.fields_id %>"><%= fields.fields_name %></option>
+                                                            <% } %>
+                                                        <% }) %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        <% } %>
+
+                                        <div class="row mb-3">
+                                            <label for="inputText" class="col-sm-2 col-form-label">Field Label</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" id="field_label" name="field_label" class="form-control" value="<%= entry.fields_name %>">
+                                            </div>
+                                            <% if(error_message != ""){ %>
+                                                <div class="alert alert-warning alert-dismissible fade show mt-3 mb-0" role="alert">
+                                                    <%= error_message %>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>
+                                            <% } %>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="inputText" class="col-sm-2 col-form-label">Field Name</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="field_name" id="field_name" class="form-control" value="<%= entry.fields_value %>" onfocusin="myTextlowercase()">
+                                            </div>
+                                            <% if(error_message != ""){ %>
+                                                <div class="alert alert-warning alert-dismissible fade show mt-3 mb-0" role="alert">
+                                                    <%= error_message %>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                            
+                                        <div class="row mb-3" id="customRepeater" style="display: none;">
+                                            <label for="inputText" class="col-sm-2 col-form-label">Number of Sub Field</label>
+                                            <div class="col-sm-10">
+                                                <input type="number" name="field_sub_count" class="form-control" value="<%= entry.field_sub_count %>">
+                                            </div>
+                                            <p></p>
+                                        </div>
+                                        
+                                        <input type="hidden" name="field_groups_id" value="<%= entry.field_groups_id %>">
+
+                                        <div class="row mb-3">
+                                            <div class="col-sm-10">
+                                                <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Update Field</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                    <!-- End General Form Elements -->
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </section>
+            <% }) %>
+        <% } %>
+
+        <% if(fields_list){ %>
+            <% fields_list.forEach(entry => { %>
+                <% if(entry.field_type_id == "8"){ %>
+                    <section class="section">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Add New Repeater Field</h5>
+
+                                        <!-- General Form Elements -->
+                                        <form action="../save_repeater_fields" method="post" class="row g-3 needs-validation" novalidate>
+                                            <% if(field_type_list){ %>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-2 col-form-label">Field Type</label>
+                                                    <div class="col-sm-10">
+                                                        <select class="form-select" id="repeater_field_type_id" name="repeater_field_type_id" class="form-select" aria-label="Default select example" required onchange="myFunction()">
+                                                            <% field_type_list.forEach(entry => { %>
+                                                                <option value="<%= entry.field_type_id %>"><%= entry.field_type_value %></option>
+                                                            <% }) %>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            <% } %>
+
+                                            <div class="row mb-3">
+                                                <label for="inputText" class="col-sm-2 col-form-label">Field Label</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="repeater_field_label" name="repeater_field_label" class="form-control" required>
+                                                    <div class="invalid-feedback">
+                                                        Please Enter a Field Label.
+                                                    </div>
+                                                    <% if(error_Repeater != ""){ %>
+                                                        <div class="alert alert-warning alert-dismissible fade show mt-3 mb-0" role="alert">
+                                                            <%= error_Repeater %>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        </div>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mb-3">
+                                                <label for="inputText" class="col-sm-2 col-form-label">Field Name</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" id="repeater_field_name" name="repeater_field_name" class="form-control" required onfocusin="myTextlowercaseRep()">
+                                                    <div class="invalid-feedback">
+                                                        Please Enter a Field Name.
+                                                    </div>
+                                                    <% if(error_Repeater != ""){ %>
+                                                        <div class="alert alert-warning alert-dismissible fade show mt-3 mb-0" role="alert">
+                                                            <%= error_Repeater %>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        </div>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+
+                                            <input type="hidden" name="fields_id" value="<%= entry.fields_id %>">
+
+                                            <div class="row mb-3">
+                                                <div class="col-sm-10">
+                                                    <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Field</button>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                        <!-- End General Form Elements -->
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-10">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Repeater Fields List</h5>
+                                        <% var i=1 %>
+                                        <% if(repeater_fields_list){ %>
+                                            <!-- Table with hoverable rows -->
+                                            <table class="table table-hover">
+                                                <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Field Type</th>
+                                                    <th scope="col">Field Label</th>
+                                                    <th scope="col">Fields Name</th>
+                                                    <th class="text-center" scope="col" colspan="3">Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% repeater_fields_list.forEach(entry => { %>
+                                                        <tr>
+                                                            <th class="col-1" scope="row"><%= i %></th>
+                                                            <% if(field_type_list){ %>
+                                                                <% field_type_list.forEach(field_type => { %>
+                                                                    <% if(field_type.field_type_id == entry.field_type_id){ %>
+                                                                        <td class="col-3"><%= field_type.field_type_value %></td>
+                                                                    <% } %>
+                                                                <% }) %>
+                                                            <% } %>
+                                                            <td class="col-3"><%= entry.repeater_field_label %></td>
+                                                            <td class="col-3"><%= entry.repeater_field_name %></td>
+                                                            <td class="col-1"><a href="/admin/repeater_field_edit/<%= entry.repeater_field_id %>">Edit</a></td>
+                                                            <td class="col-1"><a href="/admin/repeater_field_delete/<%= entry.repeater_field_id %>">Delete</a></td>
+                                                        </tr>
+                                                        <% i++ %>
+                                                    <% }) %>
+                                                </tbody>
+                                            </table>
+                                            <!-- End Table with hoverable rows -->
+                                        <% } else { %>
+                                            <h6>Fields not found</h6>
+                                        <% } %>
+                        
+                                    </div>
+                                </div>
+                        
+                            </div>
+
+                        </div>
+                    </section>
+                <% } %>
+            <% }) %>
+        <% } %>
+
+    </main><!-- End #main -->
+
+<%- include('footer') %>

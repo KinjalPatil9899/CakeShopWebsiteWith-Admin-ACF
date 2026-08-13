@@ -1,0 +1,87 @@
+<%- include('header') %>
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1>Pages</h1>
+            <nav>
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/admin/">Home</a></li>
+                <li class="breadcrumb-item active">Pages</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                        <h5 class="card-title">Add New Page</h5>
+
+                        <!-- General Form Elements -->
+                        <form class="needs-validation" action="/admin/save_page" method="post">
+
+                            <div class="row mb-3">
+                                <label for="pageText" class="col-sm-2 col-form-label">Page name</label>
+                                <div class="col-sm-10 input-group has-validation">
+                                    <input type="text" name="page_name" class="form-control" id="pageText" required>
+                                    <div class="invalid-feedback">Please enter Page name.</div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-10">
+                                    <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Page</button>
+                                </div>
+                            </div>
+
+                        </form><!-- End General Form Elements -->
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Pages List</h5>
+                            <% var i=1 %>
+                            <% if(pagesList){ %>
+                                <!-- Table with hoverable rows -->
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th class="text-center" scope="col" colspan="3">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% pagesList.forEach(entry => { %>
+                                            <tr>
+                                                <th class="col-1" scope="row"><%= i %></th>
+                                                <td class="col-8"><%= entry.page_name %></td>
+                                                <td class="col-1"><a href="/admin/page_edit/<%= entry.page_id %>">Edit</a></td>
+                                                <td class="col-1"><a href="/admin/update_page/<%= entry.page_id %>">Update</a></td>
+                                                <td class="col-1"><a href="/admin/page_delete/<%= entry.page_id %>">Delete</a></td>
+                                            </tr>
+                                            <% i++ %>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                                <!-- End Table with hoverable rows -->
+                            <% } else { %>
+                                <h6>Pages not found</h6>
+                            <% } %>
+            
+                        </div>
+                    </div>
+            
+                </div>
+            </div>
+        </section>
+
+    </main><!-- End #main -->
+
+<%- include('footer') %>

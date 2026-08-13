@@ -1,0 +1,54 @@
+<%- include('header') %>
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1>Pages</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/admin/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/admin/pages/">Pages</a></li>
+                    <li class="breadcrumb-item">Update Page</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                        <h5 class="card-title">Update Page</h5>
+                        <% if(pagesList){ %>
+                            <!-- General Form Elements -->
+                            <% pagesList.forEach(entry => { %>
+                                <form class="needs-validation" action="/admin/save_update_page/<%= entry.page_id %>" method="post">
+                                    <div class="row mb-3">
+                                        <label for="pageText" class="col-sm-2 col-form-label">Page name</label>
+                                        <div class="col-sm-10 input-group has-validation">
+                                            <input type="text" name="page_name" class="form-control" id="pageText" value="<%= entry.page_name %>" required>
+                                            <div class="invalid-feedback">Please enter Page name.</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-sm-10">
+                                            <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Update Page</button>
+                                        </div>
+                                    </div>
+
+                                </form><!-- End General Form Elements -->
+                            <% }) %>
+                        <% } else { %>
+                            <h6>Pages not found</h6>
+                        <% } %>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main><!-- End #main -->
+
+<%- include('footer') %>

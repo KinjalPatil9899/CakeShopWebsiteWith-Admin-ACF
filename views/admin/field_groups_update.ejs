@@ -1,0 +1,74 @@
+<%- include('header') %>
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1>Custom Fields</h1>
+            <nav>
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item">Custom Fields</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Update Field Group</h5>
+                            <% if(field_groups_list){ %>
+                                <% field_groups_list.forEach(entry => { %>
+                                    <!-- General Form Elements -->
+                                    <form action="../update_field_groups/<%= entry.field_groups_id %>" method="post" class="row g-3 needs-validation" novalidate>
+
+                                        <div class="row mb-3">
+                                            <label for="inputText" class="col-sm-2 col-form-label">Field Group Name</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" name="field_groups_name" class="form-control" value="<%= entry.field_groups_name %>" required>
+                                                <div class="invalid-feedback">
+                                                    Please Enter a Field Group Name.
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <% if(pages_list){ %>
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label">Field Page</label>
+                                                <div class="col-sm-10">
+                                                    <select name="page_id" class="form-select" aria-label="Default select example" required>
+                                                        <% pages_list.forEach(pages => { %>
+                                                            <% if(entry.page_name == pages.page_name){ %>
+                                                                <option selected value="<%= pages.page_id %>"><%= pages.page_name %></option>
+                                                            <% } else { %>
+                                                                <option value="<%= pages.page_id %>"><%= pages.page_name %></option>
+                                                            <% } %>
+                                                        <% }) %>
+                                                    </select>
+                                                    <div class="invalid-feedback">
+                                                        Please Enter a Page Name.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <% } %>
+
+                                        <div class="row mb-3">
+                                            <div class="col-sm-10">
+                                                <button type="submit" class="btn btn-primary"> <i class="bi bi-plus-lg"></i> Update Field Group </button>
+                                            </div>
+                                        </div>
+
+                                    </form><!-- End General Form Elements -->
+                                <% }) %>
+                            <% } %>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main><!-- End #main -->
+
+<%- include('footer') %>

@@ -1,0 +1,390 @@
+<%- include('header') %>
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Edit Page</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/admin/">Home</a></li>
+          <li class="breadcrumb-item"><a href="/admin/pages">Pages</a></li>
+          <li class="breadcrumb-item active">Edit Page</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Edit <%= pageName %></h5>
+                        <!-- General Form Elements -->
+
+                        <% if(fields_list){ %>
+                            <form action="../page_update/<%= pageId %>" method="post" enctype="multipart/form-data">
+                                <ul class="nav nav-pills custom_nav" id="myTab" role="tablist">
+                                    <% var i=1; %>
+                                    <% fields_list.forEach(entry => { %>
+                                        <% if(entry.field_type_name == "tab"){ %>
+                                            <li class="nav-item" role="presentation">
+                                                <% if(i == "1"){ %>
+                                                    <button class="nav-link active" id="<%= entry.fields_value %>-tab" data-bs-toggle="tab" data-bs-target="#<%= entry.fields_value %>" type="button" role="tab" aria-controls="<%= entry.fields_value %>" aria-selected="true"><%= entry.fields_name %></button>
+                                                <% } else { %>
+                                                    <button class="nav-link" id="<%= entry.fields_value %>-tab" data-bs-toggle="tab" data-bs-target="#<%= entry.fields_value %>" type="button" role="tab" aria-controls="<%= entry.fields_value %>" aria-selected="true"><%= entry.fields_name %></button>
+                                                <% } %>
+                                            </li>
+                                            <% i++; %>
+                                        <% } %>
+                                    <% }) %>
+                                </ul>
+                                <% var j=1; %>
+                                <div class="tab-content pt-2 custom_content" id="myTabContent">
+                                    <% fields_list.forEach(tab => { %>
+                                        <% if(tab.field_type_name == "tab"){ %>
+                                            <% if(j == "1"){ %>
+                                                <div class="tab-pane fade show active" id="<%= tab.fields_value %>" role="tabpanel" aria-labelledby="<%= tab.fields_value %>-tab">
+                                                    <% fields_list.forEach(entry => { %>
+                                                        <% if(tab.fields_id == entry.field_tab_id){ %>
+                                                            <% if(entry.field_type_name == "text"){ %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputText" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="text" name="<%= entry.fields_value %>" class="form-control" value="<%= entry.page_meta_value %>">
+                                                                    </div>
+                                                                </div>
+                                                            <% } else if(entry.field_type_name == "textarea"){ %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputTextarea" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <textarea name="<%= entry.fields_value %>" class="form-control" style="height: 100px">
+                                                                            <%= entry.page_meta_value %>
+                                                                        </textarea>
+                                                                    </div>
+                                                                </div>
+                                                            <% } else if(entry.field_type_name == "image") { %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputFile" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="file" accept="image/png, image/gif, image/jpeg" name="<%= entry.fields_value %>" class="form-control">
+                                                                        <% if(entry.page_meta_value != ""){ %>
+                                                                            <div class="row g-0 mt-3">
+                                                                                <div class="col-md-4">
+                                                                                <img src="http://127.0.0.1:3000/upload/<%= entry.page_meta_value %>" class="img-fluid rounded" alt="...">
+                                                                                </div>
+                                                                            </div>
+                                                                        <% } %>
+                                                                    </div>
+                                                                </div>
+                                                            <% } else if(entry.field_type_name == "wysiwyg") { %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputWysiwyg" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <div class="card">
+                                                                            <div class="card-body">
+                                                                                <p></p>
+                                                                                <textarea name="<%= entry.fields_value %>" id="<%= entry.fields_value %>" class="tinymce-editor">
+                                                                                    <%= entry.page_meta_value %>
+                                                                                </textarea><!-- End TinyMCE Editor -->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            <%} else if(entry.field_type_name == "date_picker") { %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputDate" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="date" name="<%= entry.fields_value %>" class="form-control" value="<%= entry.page_meta_value %>">
+                                                                    </div>
+                                                                </div>
+                                                            <%} else if(entry.field_type_name == "time_picker") { %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputTime" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="time" name="<%= entry.fields_value %>" class="form-control" value="<%= entry.page_meta_value %>">
+                                                                    </div>
+                                                                </div>
+                                                            <%} else if(entry.field_type_name == "date_time_picker") { %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputTime" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="datetime-local" name="<%= entry.fields_value %>" class="form-control" value="<%= entry.page_meta_value %>">
+                                                                    </div>
+                                                                </div>
+                                                            <%} else if(entry.field_type_name == "repeater") { %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputTime" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <!-- <input type="hidden" name="<%= entry.fields_value %>" class="form-control" value="<%= entry.fields_value %>"> -->
+                                                                </div>
+                                                                <ol class="list-group list-group-numbered">
+                                                                    <% var j = 0 ; %>
+                                                                    <% for(var i = 1; i <= entry.field_sub_count; i++){ %>
+                                                                        <li class="list-group-item">
+                                                                            <% repeater_fields_list.forEach(repeater_field => { %>
+                                                                                <% if(entry.fields_id ==  repeater_field.fields_id){ %>
+                                                                                    <% if(repeater_field.field_type_name == "text"){ %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputText" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <input type="text" name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="form-control" <% if(repeater_field.repeater_field_value != ""){ %><% var temp = JSON.parse(repeater_field.repeater_field_value); %><% temp.forEach(tmp => { %> value="<%= tmp[j] %>" <% }) %><% } else { %> value="" <% } %>>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <% } else if(repeater_field.field_type_name == "textarea"){ %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputTextarea" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <textarea name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="form-control" style="height: 100px"><% if(repeater_field.repeater_field_value != ""){ %><% var temp = JSON.parse(repeater_field.repeater_field_value); %><% temp.forEach(tmp => { %><%= tmp[j] %><% }) %><% } else { %> "" <% } %></textarea>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <% } else if(repeater_field.field_type_name == "image") { %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputFile" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <input type="file" name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="form-control" accept="image/png, image/gif, image/jpeg">
+                                                                                                <% if(repeater_field.repeater_field_value != ""){ %>
+                                                                                                    <% var temp = JSON.parse(repeater_field.repeater_field_value); %>
+                                                                                                    <% temp.forEach(tmp => { %>
+                                                                                                        <% if(tmp[j] != ""){ %>
+                                                                                                            <div class="row g-0 mt-3">
+                                                                                                                <div class="col-md-4">
+                                                                                                                <img src="http://127.0.0.1:3000/upload/<%= tmp[j] %>" class="img-fluid rounded" alt="...">
+                                                                                                                <input type="hidden" name="old_repeater_image_<%= repeater_field.fields_id %>" value="<%= tmp[j] %>" class="form-control">
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        <% } %>
+                                                                                                    <% }) %>
+                                                                                                <% } %>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <% } else if(repeater_field.field_type_name == "wysiwyg") { %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputWysiwyg" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <div class="card">
+                                                                                                    <div class="card-body">
+                                                                                                        <p></p>
+                                                                                                        <textarea name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" id="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="tinymce-editor">
+                                                                                                            <% if(repeater_field.repeater_field_value != ""){ %><% var temp = JSON.parse(repeater_field.repeater_field_value); %><% temp.forEach(tmp => { %><%= tmp[j] %><% }) %><% } else { %> "" <% } %>
+                                                                                                        </textarea><!-- End TinyMCE Editor -->
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <%} else if(repeater_field.field_type_name == "date_picker") { %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputDate" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <input type="date" name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="form-control" value="<% if(repeater_field.repeater_field_value != ""){ %><% var temp = JSON.parse(repeater_field.repeater_field_value); %><% temp.forEach(tmp => { %><%= tmp[j] %><% }) %><% } else { %> "" <% } %>">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <%} else if(repeater_field.field_type_name == "time_picker") { %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputTime" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <input type="time" name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="form-control" value="<% if(repeater_field.repeater_field_value != ""){ %><% var temp = JSON.parse(repeater_field.repeater_field_value); %><% temp.forEach(tmp => { %><%= tmp[j] %><% }) %><% } else { %> "" <% } %>">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <%} else if(repeater_field.field_type_name == "date_time_picker") { %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputTime" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <input type="datetime-local" name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="form-control" value="<%= entry.page_meta_value %>">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <% } %>
+                                                                                <% } %>
+                                                                            <% }) %>
+                                                                        </li>
+                                                                        <% j++ %>
+                                                                    <% } %>
+                                                                </ol>
+                                                                <p></p>
+                                                            <% } %>
+                                                        <% } %>
+                                                    <% }) %>
+                                                </div>
+                                            <% } else { %>
+                                                <div class="tab-pane fade" id="<%= tab.fields_value %>" role="tabpanel" aria-labelledby="<%= tab.fields_value %>-tab">
+                                                    <% fields_list.forEach(entry => { %>
+                                                        <% if(tab.fields_id == entry.field_tab_id){ %>
+                                                            <% if(entry.field_type_name == "text"){ %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputText" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="text" name="<%= entry.fields_value %>" class="form-control" value="<%= entry.page_meta_value %>">
+                                                                    </div>
+                                                                </div>
+                                                            <% } else if(entry.field_type_name == "textarea"){ %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputTextarea" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <textarea name="<%= entry.fields_value %>" class="form-control" style="height: 100px">
+                                                                            <%= entry.page_meta_value %>
+                                                                        </textarea>
+                                                                    </div>
+                                                                </div>
+                                                            <% } else if(entry.field_type_name == "image") { %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputFile" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="file" accept="image/png, image/gif, image/jpeg" name="<%= entry.fields_value %>" class="form-control">
+                                                                        <% if(entry.page_meta_value != ""){ %>
+                                                                            <div class="row g-0 mt-3">
+                                                                                <div class="col-md-4">
+                                                                                <img src="http://127.0.0.1:3000/upload/<%= entry.page_meta_value %>" class="img-fluid rounded" alt="...">
+                                                                                </div>
+                                                                            </div>
+                                                                        <% } %>
+                                                                    </div>
+                                                                </div>
+                                                            <% } else if(entry.field_type_name == "wysiwyg") { %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputWysiwyg" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <div class="card">
+                                                                            <div class="card-body">
+                                                                                <p></p>
+                                                                                <textarea name="<%= entry.fields_value %>" id="<%= entry.fields_value %>" class="tinymce-editor">
+                                                                                    <%= entry.page_meta_value %>
+                                                                                </textarea><!-- End TinyMCE Editor -->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            <%} else if(entry.field_type_name == "date_picker") { %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputDate" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="date" name="<%= entry.fields_value %>" class="form-control" value="<%= entry.page_meta_value %>">
+                                                                    </div>
+                                                                </div>
+                                                            <%} else if(entry.field_type_name == "time_picker") { %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputTime" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="time" name="<%= entry.fields_value %>" class="form-control" value="<%= entry.page_meta_value %>">
+                                                                    </div>
+                                                                </div>
+                                                            <%} else if(entry.field_type_name == "date_time_picker") { %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputTime" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="datetime-local" name="<%= entry.fields_value %>" class="form-control" value="<%= entry.page_meta_value %>">
+                                                                    </div>
+                                                                </div>
+                                                            <%} else if(entry.field_type_name == "repeater") { %>
+                                                                <div class="row mb-3">
+                                                                    <label for="inputTime" class="col-sm-2 col-form-label"><%= entry.fields_name %></label>
+                                                                    <!-- <input type="hidden" name="<%= entry.fields_value %>" class="form-control" value="<%= entry.fields_value %>"> -->
+                                                                </div>
+                                                                <ol class="list-group list-group-numbered">
+                                                                    <% var j = 0 ; %>
+                                                                    <% for(var i = 1; i <= entry.field_sub_count; i++){ %>
+                                                                        <li class="list-group-item">
+                                                                            <% repeater_fields_list.forEach(repeater_field => { %>
+                                                                                <% if(entry.fields_id ==  repeater_field.fields_id){ %>
+                                                                                    <% if(repeater_field.field_type_name == "text"){ %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputText" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <input type="text" name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="form-control" <% if(repeater_field.repeater_field_value != ""){ %><% var temp = JSON.parse(repeater_field.repeater_field_value); %><% temp.forEach(tmp => { %> value="<%= tmp[j] %>" <% }) %><% } else { %> value="" <% } %>>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <% } else if(repeater_field.field_type_name == "textarea"){ %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputTextarea" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <textarea name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="form-control" style="height: 100px"><% if(repeater_field.repeater_field_value != ""){ %><% var temp = JSON.parse(repeater_field.repeater_field_value); %><% temp.forEach(tmp => { %><%= tmp[j] %><% }) %><% } else { %> "" <% } %></textarea>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <% } else if(repeater_field.field_type_name == "image") { %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputFile" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <input type="file" name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="form-control" accept="image/png, image/gif, image/jpeg">
+                                                                                                <% if(repeater_field.repeater_field_value != ""){ %>
+                                                                                                    <% var temp = JSON.parse(repeater_field.repeater_field_value); %>
+                                                                                                    <% temp.forEach(tmp => { %>
+                                                                                                        <% if(tmp[j] != ""){ %>
+                                                                                                            <div class="row g-0 mt-3">
+                                                                                                                <div class="col-md-4">
+                                                                                                                <img src="http://127.0.0.1:3000/upload/<%= tmp[j] %>" class="img-fluid rounded" alt="...">
+                                                                                                                <input type="hidden" name="old_repeater_image_<%= repeater_field.fields_id %>" value="<%= tmp[j] %>" class="form-control">
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        <% } %>
+                                                                                                    <% }) %>
+                                                                                                <% } %>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <% } else if(repeater_field.field_type_name == "wysiwyg") { %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputWysiwyg" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <div class="card">
+                                                                                                    <div class="card-body">
+                                                                                                        <p></p>
+                                                                                                        <textarea name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" id="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="tinymce-editor">
+                                                                                                            <% if(repeater_field.repeater_field_value != ""){ %><% var temp = JSON.parse(repeater_field.repeater_field_value); %><% temp.forEach(tmp => { %><%= tmp[j] %><% }) %><% } else { %> "" <% } %>
+                                                                                                        </textarea><!-- End TinyMCE Editor -->
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <%} else if(repeater_field.field_type_name == "date_picker") { %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputDate" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <input type="date" name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="form-control" value="<% if(repeater_field.repeater_field_value != ""){ %><% var temp = JSON.parse(repeater_field.repeater_field_value); %><% temp.forEach(tmp => { %><%= tmp[j] %><% }) %><% } else { %> "" <% } %>">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <%} else if(repeater_field.field_type_name == "time_picker") { %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputTime" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <input type="time" name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="form-control" value="<% if(repeater_field.repeater_field_value != ""){ %><% var temp = JSON.parse(repeater_field.repeater_field_value); %><% temp.forEach(tmp => { %><%= tmp[j] %><% }) %><% } else { %> "" <% } %>">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <%} else if(repeater_field.field_type_name == "date_time_picker") { %>
+                                                                                        <div class="row mb-3">
+                                                                                            <label for="inputTime" class="col-sm-2 col-form-label"><%= repeater_field.repeater_field_label %></label>
+                                                                                            <div class="col-sm-10">
+                                                                                                <input type="datetime-local" name="<%= repeater_field.repeater_field_name %>_<%= repeater_field.fields_id %>" class="form-control" value="<%= entry.page_meta_value %>">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    <% } %>
+                                                                                <% } %>
+                                                                            <% }) %>
+                                                                        </li>
+                                                                        <% j++ %>
+                                                                    <% } %>
+                                                                </ol>
+                                                                <p></p>
+                                                            <% } %>
+                                                        <% } %>
+                                                    <% }) %>
+                                                </div>
+                                            <% } %>
+                                        <% } %>
+                                        <% j++; %>
+                                    <% }) %>
+                                </div>
+                                <% fields_list.forEach(entry => { %>
+                                    
+                                <% }) %>
+                                <div class="row mb-3">
+                                    <div class="col-sm-10">
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </div>
+                            </form><!-- End General Form Elements -->
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+  </main><!-- End #main -->
+
+<%- include('footer') %>

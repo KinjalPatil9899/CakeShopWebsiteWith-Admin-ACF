@@ -1,0 +1,100 @@
+<%- include('header') %>
+    <main id="main" class="main">
+
+        <div class="pagetitle">
+            <h1>Eidt Repeater Field</h1>
+            <nav>
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/admin/custom_fields">Custom Fields</a></li>
+                <li class="breadcrumb-item active">Eidt Repeater Field</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+
+        <section class="section">
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Eidt Repeater Field</h5>
+
+                            <% if(repeater_fields_list){ %>
+                                <% repeater_fields_list.forEach(entry => { %>
+                                    <!-- General Form Elements -->
+                                    <form action="../update_repeater_field/<%= entry.repeater_field_id %>" method="post" class="row g-3 needs-validation" novalidate>
+                                        <% if(field_type_list){ %>
+                                            <div class="row mb-3">
+                                                <label class="col-sm-2 col-form-label">Field Type</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-select" id="repeater_field_type_id" name="repeater_field_type_id" class="form-select" aria-label="Default select example" required>
+                                                        <% field_type_list.forEach(field_type => { %>
+                                                            <% if(field_type.field_type_id == entry.field_type_id){ %>
+                                                                <option selected value="<%= field_type.field_type_id %>"><%= field_type.field_type_value %></option>
+                                                            <% } else { %>
+                                                                <option value="<%= field_type.field_type_id %>"><%= field_type.field_type_value %></option>
+                                                            <% } %>
+                                                        <% }) %>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        <% } %>
+
+                                        <div class="row mb-3">
+                                            <label for="inputText" class="col-sm-2 col-form-label">Field Label</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" id="repeater_field_label" name="repeater_field_label" class="form-control" value="<%= entry.repeater_field_label %>" required>
+                                                <div class="invalid-feedback">
+                                                    Please Enter a Field Label.
+                                                </div>
+                                                <% if(error_Repeater != ""){ %>
+                                                    <div class="alert alert-warning alert-dismissible fade show mt-3 mb-0" role="alert">
+                                                        <%= error_Repeater %>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <label for="inputText" class="col-sm-2 col-form-label">Field Name</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" id="repeater_field_name" name="repeater_field_name" class="form-control" value="<%= entry.repeater_field_name %>" required onfocusin="myTextlowercaseRep()">
+                                                <div class="invalid-feedback">
+                                                    Please Enter a Field Name.
+                                                </div>
+                                                <% if(error_Repeater != ""){ %>
+                                                    <div class="alert alert-warning alert-dismissible fade show mt-3 mb-0" role="alert">
+                                                        <%= error_Repeater %>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="repeater_field_value" value="<%= entry.repeater_field_value %>">
+                                        <input type="hidden" name="fields_id" value="<%= entry.fields_id %>">
+
+                                        <div class="row mb-3">
+                                            <div class="col-sm-10">
+                                                <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Field</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                    <!-- End General Form Elements -->
+                                <% }) %>
+                            <% } %>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+    </main><!-- End #main -->
+    
+<%- include('footer') %>
